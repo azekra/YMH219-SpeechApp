@@ -36,28 +36,49 @@ namespace YMH219_SpeechApp
             ClientSize = new Size(1100, 740);
             BackColor = Color.FromArgb(245, 247, 250);
             Font = new Font("Segoe UI", 10F);
+            DoubleBuffered = true;
 
             var root = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                Padding = new Padding(24),
+                Padding = new Padding(28, 22, 28, 18),
                 ColumnCount = 1,
                 RowCount = 3,
                 BackColor = BackColor
             };
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 90));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 96));
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 48));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 54));
             Controls.Add(root);
 
-            var heading = new Label
+            var heading = new TableLayoutPanel
             {
-                Text = "Ses ve Metin Dönüştürücü\nMetni dinleyin veya mikrofonla konuşup metne dönüştürün.",
                 Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 16F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(31, 48, 71),
-                TextAlign = ContentAlignment.MiddleLeft
+                ColumnCount = 1,
+                RowCount = 2,
+                BackColor = BackColor,
+                Margin = new Padding(0)
             };
+            heading.RowStyles.Add(new RowStyle(SizeType.Percent, 60));
+            heading.RowStyles.Add(new RowStyle(SizeType.Percent, 40));
+            heading.Controls.Add(new Label
+            {
+                Text = "Ses ve Metin Dönüştürücü",
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 22F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(31, 48, 71),
+                TextAlign = ContentAlignment.BottomLeft,
+                Margin = new Padding(0)
+            }, 0, 0);
+            heading.Controls.Add(new Label
+            {
+                Text = "Metni dinleyin veya mikrofonla konuşup metne dönüştürün.",
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 10F),
+                ForeColor = Color.FromArgb(103, 119, 138),
+                TextAlign = ContentAlignment.MiddleLeft,
+                Margin = new Padding(0)
+            }, 0, 1);
             root.Controls.Add(heading, 0, 0);
 
             var panels = new TableLayoutPanel
@@ -74,10 +95,13 @@ namespace YMH219_SpeechApp
             panels.Controls.Add(CreateTextToSpeechPanel(), 0, 0);
             panels.Controls.Add(CreateSpeechToTextPanel(), 1, 0);
 
-            _statusLabel.Text = "Hazır. Bir işlem başlatın.";
+            _statusLabel.Text = "●  Hazır. Bir işlem başlatın.";
             _statusLabel.Dock = DockStyle.Fill;
             _statusLabel.TextAlign = ContentAlignment.MiddleLeft;
-            _statusLabel.ForeColor = Color.FromArgb(65, 82, 102);
+            _statusLabel.ForeColor = Color.FromArgb(65, 105, 75);
+            _statusLabel.BackColor = Color.FromArgb(232, 245, 236);
+            _statusLabel.Padding = new Padding(14, 0, 14, 0);
+            _statusLabel.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             root.Controls.Add(_statusLabel, 0, 2);
         }
 
@@ -87,17 +111,21 @@ namespace YMH219_SpeechApp
             var content = (TableLayoutPanel)panel.Controls[0];
 
             _speechText.Dock = DockStyle.Fill;
-            _speechText.BorderStyle = BorderStyle.FixedSingle;
+            _speechText.BorderStyle = BorderStyle.None;
             _speechText.Font = new Font("Segoe UI", 11F);
-            _speechText.Text = "Okutmak istediğiniz metni buraya yazın.";
-            content.Controls.Add(_speechText, 0, 1);
+            _speechText.Text = string.Empty;
+            _speechText.BackColor = Color.FromArgb(249, 251, 253);
+            _speechText.ForeColor = Color.FromArgb(39, 54, 72);
+            _speechText.Margin = new Padding(0, 6, 0, 0);
+            content.Controls.Add(_speechText, 0, 2);
 
             var buttons = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 FlowDirection = FlowDirection.LeftToRight,
                 WrapContents = true,
-                Padding = new Padding(0, 10, 0, 0)
+                Padding = new Padding(0, 12, 0, 0),
+                Margin = new Padding(0)
             };
             ConfigureButton(_speakButton, "▶ Başlat", Color.FromArgb(32, 114, 190));
             ConfigureButton(_pauseButton, "Ⅱ Duraklat", Color.FromArgb(81, 99, 120));
@@ -108,7 +136,7 @@ namespace YMH219_SpeechApp
             _stopSpeakingButton.Click += StopSpeakingButton_Click;
             _clearSpeechButton.Click += (_, _) => _speechText.Clear();
             buttons.Controls.AddRange(new Control[] { _speakButton, _pauseButton, _stopSpeakingButton, _clearSpeechButton });
-            content.Controls.Add(buttons, 0, 2);
+            content.Controls.Add(buttons, 0, 3);
             return panel;
         }
 
@@ -118,17 +146,21 @@ namespace YMH219_SpeechApp
             var content = (TableLayoutPanel)panel.Controls[0];
 
             _recognizedText.Dock = DockStyle.Fill;
-            _recognizedText.BorderStyle = BorderStyle.FixedSingle;
+            _recognizedText.BorderStyle = BorderStyle.None;
             _recognizedText.Font = new Font("Segoe UI", 11F);
             _recognizedText.ReadOnly = true;
-            content.Controls.Add(_recognizedText, 0, 1);
+            _recognizedText.BackColor = Color.FromArgb(249, 251, 253);
+            _recognizedText.ForeColor = Color.FromArgb(39, 54, 72);
+            _recognizedText.Margin = new Padding(0, 6, 0, 0);
+            content.Controls.Add(_recognizedText, 0, 2);
 
             var buttons = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 FlowDirection = FlowDirection.LeftToRight,
                 WrapContents = true,
-                Padding = new Padding(0, 10, 0, 0)
+                Padding = new Padding(0, 12, 0, 0),
+                Margin = new Padding(0)
             };
             ConfigureButton(_listenButton, "🎙 Dinlemeyi Başlat", Color.FromArgb(32, 114, 190));
             ConfigureButton(_stopListeningButton, "■ Dinlemeyi Durdur", Color.FromArgb(183, 65, 65));
@@ -137,7 +169,7 @@ namespace YMH219_SpeechApp
             _stopListeningButton.Click += StopListeningButton_Click;
             _clearRecognizedButton.Click += (_, _) => _recognizedText.Clear();
             buttons.Controls.AddRange(new Control[] { _listenButton, _stopListeningButton, _clearRecognizedButton });
-            content.Controls.Add(buttons, 0, 2);
+            content.Controls.Add(buttons, 0, 3);
             return panel;
         }
 
@@ -147,28 +179,44 @@ namespace YMH219_SpeechApp
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
-                Padding = new Padding(16),
-                Margin = new Padding(0, 0, 12, 0)
+                Padding = new Padding(18),
+                Margin = new Padding(8, 4, 8, 8)
             };
+            section.Paint += (_, e) => ControlPaint.DrawBorder(e.Graphics, section.ClientRectangle,
+                Color.FromArgb(225, 231, 238), ButtonBorderStyle.Solid);
             var content = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 1,
-                RowCount = 3,
+                RowCount = 4,
                 BackColor = Color.White
             };
-            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 42));
+            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 38));
+            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             content.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 94));
+            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 108));
             var heading = new Label
             {
                 Text = title,
                 Dock = DockStyle.Fill,
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(31, 48, 71),
-                TextAlign = ContentAlignment.MiddleLeft
+                TextAlign = ContentAlignment.MiddleLeft,
+                Margin = new Padding(0)
+            };
+            var description = new Label
+            {
+                Text = title == "METİNDEN SESE"
+                    ? "Metninizi yazın ve sesli okumayı kontrol edin."
+                    : "Mikrofonu açın, konuşmanız metin olarak eklensin.",
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 9F),
+                ForeColor = Color.FromArgb(112, 127, 144),
+                TextAlign = ContentAlignment.MiddleLeft,
+                Margin = new Padding(0)
             };
             content.Controls.Add(heading, 0, 0);
+            content.Controls.Add(description, 0, 1);
             section.Controls.Add(content);
             return section;
         }
@@ -177,10 +225,13 @@ namespace YMH219_SpeechApp
         {
             button.Text = text;
             button.AutoSize = true;
-            button.Height = 38;
-            button.Padding = new Padding(8, 0, 8, 0);
+            button.Height = 40;
+            button.Padding = new Padding(10, 0, 10, 0);
+            button.Margin = new Padding(0, 0, 8, 6);
+            button.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
+            button.FlatAppearance.MouseOverBackColor = ControlPaint.Light(color, 0.12F);
             button.BackColor = color;
             button.ForeColor = Color.White;
             button.Cursor = Cursors.Hand;
@@ -344,7 +395,26 @@ namespace YMH219_SpeechApp
 
         private void SetStatus(string message)
         {
-            _statusLabel.Text = message;
+            _statusLabel.Text = $"●  {message}";
+            if (message.Contains("hata", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("başlatılamadı", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("durdurulamadı", StringComparison.OrdinalIgnoreCase))
+            {
+                _statusLabel.ForeColor = Color.FromArgb(155, 55, 55);
+                _statusLabel.BackColor = Color.FromArgb(252, 235, 235);
+            }
+            else if (message.Contains("dinleniyor", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("okunuyor", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("devam ediyor", StringComparison.OrdinalIgnoreCase))
+            {
+                _statusLabel.ForeColor = Color.FromArgb(38, 91, 150);
+                _statusLabel.BackColor = Color.FromArgb(231, 241, 252);
+            }
+            else
+            {
+                _statusLabel.ForeColor = Color.FromArgb(65, 105, 75);
+                _statusLabel.BackColor = Color.FromArgb(232, 245, 236);
+            }
         }
 
         private void RunOnUiThread(Action action)
