@@ -1,5 +1,6 @@
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.Text;
 
 namespace YMH219_SpeechApp
 {
@@ -17,6 +18,7 @@ namespace YMH219_SpeechApp
         private readonly Button _listenButton = new();
         private readonly Button _stopListeningButton = new();
         private readonly Button _clearRecognizedButton = new();
+        private readonly Button _saveRecognizedButton = new();
         private bool _isPaused;
         private bool _isListening;
 
@@ -164,13 +166,48 @@ namespace YMH219_SpeechApp
             };
             ConfigureButton(_listenButton, "🎙 Dinlemeyi Başlat", Color.FromArgb(32, 114, 190));
             ConfigureButton(_stopListeningButton, "■ Dinlemeyi Durdur", Color.FromArgb(183, 65, 65));
+            ConfigureButton(_saveRecognizedButton, "TXT Kaydet", Color.FromArgb(38, 133, 98));
             ConfigureButton(_clearRecognizedButton, "Temizle", Color.FromArgb(81, 99, 120));
             _listenButton.Click += ListenButton_Click;
             _stopListeningButton.Click += StopListeningButton_Click;
+            _saveRecognizedButton.Click += SaveRecognizedButton_Click;
             _clearRecognizedButton.Click += (_, _) => _recognizedText.Clear();
-            buttons.Controls.AddRange(new Control[] { _listenButton, _stopListeningButton, _clearRecognizedButton });
+            buttons.Controls.AddRange(new Control[] { _listenButton, _stopListeningButton, _saveRecognizedButton, _clearRecognizedButton });
             content.Controls.Add(buttons, 0, 3);
             return panel;
+        }
+
+        private void SaveRecognizedButton_Click(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(_recognizedText.Text))
+            {
+                ShowError("Kaydedilecek bir konuşma metni bulunmuyor.");
+                return;
+            }
+
+            using var dialog = new SaveFileDialog
+            {
+                Title = "Konuşma metnini kaydet",
+                Filter = "Metin dosyası (*.txt)|*.txt",
+                DefaultExt = "txt",
+                AddExtension = true,
+                FileName = "konusma-metni.txt",
+                OverwritePrompt = true
+            };
+
+            if (dialog.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            try
+            {
+                File.WriteAllText(dialog.FileName, _recognizedText.Text, new UTF8Encoding(true));
+                SetStatus("Konuşma metni TXT dosyasına kaydedildi.");
+            }
+            catch (Exception ex)
+            {
+                SetStatus("Metin dosyası kaydedilemedi.");
+                ShowError($"Dosya kaydedilemedi: {ex.Message}");
+            }
         }
 
         private static Panel CreateSection(string title)

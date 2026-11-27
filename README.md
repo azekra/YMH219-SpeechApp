@@ -11,7 +11,7 @@ Windows Forms uygulaması, yazılı metni sesli okur ve mikrofondan alınan konu
 ## Özellikler
 
 - **Metinden Sese:** Metin yazma, sesli okumayı başlatma/devam ettirme, duraklatma, durdurma ve metni temizleme.
-- **Sesten Metne:** Varsayılan mikrofonla konuşmayı tanıma, sonuçları zaman damgasıyla listeleme, dinlemeyi durdurma ve sonuçları temizleme.
+- **Sesten Metne:** Varsayılan mikrofonla konuşmayı tanıma, sonuçları zaman damgasıyla listeleme, TXT dosyasına kaydetme, dinlemeyi durdurma ve sonuçları temizleme.
 - Aktif işlem durumu ve mikrofon/konuşma hizmeti hataları için anlaşılır kullanıcı mesajları.
 
 ## Çalıştırma
