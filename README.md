@@ -34,7 +34,7 @@ Projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları i
 1. **Gereksinimler:** Bilgisayarınızda **Windows 10/11** işletim sistemi ve **.NET 10 SDK** kurulu olmalıdır.
 2. **Depoyu Klonlayın:**
    ```bash
-   git clone [https://github.com/kullanici-adiniz/YMH219-SpeechApp.git](https://github.com/kullanici-adiniz/YMH219-SpeechApp.git)
+   git clone [https://github.com/azekra/YMH219-SpeechApp.git](https://github.com/azekra/YMH219-SpeechApp.git)
    ```
 3. **Projeyi Açın:**
    `YMH219-SpeechApp.slnx` dosyasını **Visual Studio 2026** ile açın.
